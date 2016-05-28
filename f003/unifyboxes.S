@@ -50,17 +50,21 @@ replace_0x1460:
 	# to jump to
 	
 replace_0x1476:
-	ldi r26, 15
-	sts 0x4ff, r26
+	ldi r27, 15
+	mov r5, r27
+#	ldi r26, 15
+#	sts 0x4ff, r26
 	jmp 0x14a6
 
 	# Old box? set 0x500 to a 1 so we don't need to change other
 	# things
 	
 new_init_0x150e:
-	lds r30, 0x4ff
-	cpi r30, 15
+	ldi r27, 15
+	cp r5, r27
 	brne newbox
+	ldi r26, 15
+	sts 0x4ff, r26
 	ldi r26, 1
 newbox:	
 	sts 0x500, r26 ; a0 93 00 05 this is what we overwrote 
