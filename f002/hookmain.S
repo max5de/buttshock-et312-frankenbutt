@@ -18,7 +18,7 @@
 	rand3_time_on_min = 30
 	rand3_time_on_max = 240
 	rand3_time_off_min = 5
-	rand3_time_off_max = 120
+	rand3_time_off_max = 90
 	
 fave_modes:			; you have to have an even number or compiler will complain
 	.byte 0x76, 0x77, 0x7b, 0x78, 0x83, 0x86, 0x81, 0x86, 0x81, 0x77, 0x86, 0x86
@@ -51,7 +51,8 @@ not_in_menu:
 	std Y+15, r30
 	
 	ldi r31, 77	        ; bottom line, far right
-	call display_number_on_display		; parameter r31 (position), r30 (number from 0-255) 
+	call display_number_on_display		; parameter r31 (position), r30 (number from 0-255)
+
 	ret
 
 	# Our new rand1 mode is different to modes available on the box
@@ -123,6 +124,8 @@ check_time:
 	std Y+21, r30   ; store it
 	ldi r30, 0x18	; start a new routine with no output (restarts routine timer)
 	call run_call_table
+	ldi r30, 0
+	out 0x18, r29 ; IO[PORTB] = 0 ; turn off the fets
 
 	ldi r26, 0x64
 	call show_text_on_display ; 8 spaces on RHS top line
@@ -168,7 +171,3 @@ omk:	jmp 0x444
 replace_0x438:
 	jmp hookloopmain
 
-
-	
-
-	
