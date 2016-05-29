@@ -14,18 +14,14 @@
 	# only went to 98.
 
 	# We could use a lookup table, but we're only called a few times a second
-	# so lets multiply by 39 and divide by 100. Sorted.
+	# so lets multiply by 100 and divide by 256 (use the msb). Sorted.
 
 replace_0x128a:	
-	ldi r31, 39
+	ldi r31, 100
 	call 0x1362		; r30:r31 = r30 * r31 preserves other registeres
-	ldi r26, 100
-	ldi r27, 0
-	call 0x13bc		; divide_word
-	ldi r27, 0		; we've 8 spare bytes and nops don't compile well, let's not jump either
-	ldi r27, 0
-	ldi r27, 0
-	ldi r27, 0
+	mov r30, r31
+	jmp 0x12a0
+
 
 	
 	
