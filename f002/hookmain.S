@@ -124,9 +124,14 @@ check_time:
 	std Y+21, r30   ; store it
 	ldi r30, 0x18	; start a new routine with no output (restarts routine timer)
 	call run_call_table
-	ldi r30, 0
-	out 0x18, r29 ; IO[PORTB] = 0 ; turn off the fets
 
+	out 0x18, r29 ; IO[PORTB] = 0 ; turn off the fets
+	# Since the SPDR sends the *last* value we need to zero it out or A
+	# channel will get a short pulse when our mute ends
+	sts 0x205, r29
+	sts 0x206, r29
+	call 0x1496
+	
 	ldi r26, 0x64
 	call show_text_on_display ; 8 spaces on RHS top line
 	
