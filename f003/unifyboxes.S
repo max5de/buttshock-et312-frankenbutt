@@ -1,17 +1,29 @@
-	# The 1.5 bootloader jumpsto 0x1476, but that's in the middle of
-	# our routine. Let's move the 0x1476 code elsehwere so the 1.5 bl
-	# doesn't jump to rubbish, and use that to mark a MAXDAC box.
+	# Early boxes use a different DAC chip which requires different
+	# SPI commands, so old boxes use 1.5 firmware and new boxes use
+	# 1.6 firmware. There isn't a huge amount of difference between
+	# them.
 	#
-	# set memory 0x30f to 15 if it's a MAXDAC box (since lower mem gets wiped)
+	# We can detect if we're an old box or a new box by the bootloader
+	# that is installed.  The 1.5 bootloader jumps to 0x1476 in the
+	# middle of some 1.6 code.  The 1.6 bootloader jumps to 0x14a6
+	#
+	# So we can move the code out of the way of 0x1476, use anything
+	# jumping to 0x1476 as an indicator it's an old box.
+	#
+	# For old MAXDAC box we set memory 0x30f to 15(dec)
 	#
 	# not yet tested on 1.6bl/1.6box
 	# not yet tested on 1.5bl/1.5box (doesn't work yet)
 	
 	.org 0x3000
 
-	# since 0x1476 is a jump point, relocate all the code before it too
-	
-stuffthatwasat1460:	
+	# since 0x1476 is a jump point, we have to relocate all the
+	# code before it too
+
+replace_0x1460:
+	jmp Label_0x1460
+
+Label_0x1460:
 	cpi r26, 0x10
 	brcc Label_0x1476
 	inc r27
@@ -19,11 +31,11 @@ stuffthatwasat1460:
 	brcc Label_0x1492
 	cpi r16, 0x00
 	brne Label_0x1472
-	std Y+11,r27 ;   Memory[[r28:r29]+11] = r27;
+	std Y+11,r27 ; Memory[[r28:r29]+11] = r27;
 	jmp 0x1432
 
 Label_0x1472:
-	std Y+12,r27 ;;        Memory[[r28:r29]+12] = r27;
+	std Y+12,r27 ; Memory[[r28:r29]+12] = r27;
 	jmp 0x1432
 
 Label_0x1476:
@@ -41,9 +53,6 @@ Label_0x1484:
 Label_0x1492:
 	jmp 0x1492
 	
-replace_0x1460:
-	jmp stuffthatwasat1460
-
 	# okay, real code is out of the way, so we can add a new start point for the 1.5bl
 	# to jump to
 	
@@ -54,8 +63,11 @@ replace_0x1476:
 
 	# Old box? set 0x500 to a 1 so we don't need to change other
 	# things
-	
-new_init_0x150e:
+
+replace_0x150e:
+	jmp Label_0x150e
+
+Label_0x150e:
 	lds r27, 0x30f
 	cpi r27, 15
 	brne newbox
@@ -63,43 +75,42 @@ new_init_0x150e:
 newbox:
 	sts 0x500, r26 ; a0 93 00 05 this is what we overwrote 
 	jmp 0x1512
-	
-replace_0x150e:
-	jmp new_init_0x150e
 
+	#
 	# We measure the fet leakage and older boxes start differently....
+	#
 
 replace_0x1410:
-	jmp measure_fet
+	jmp Label_0x1410
 
-measure_fet:
+Label_0x1410:
+	push r30
 	ldi r26, 100
 	lds r30, 0x30f
 	cpi r30, 15
-	breq fet_old_box
-set_fet:	
+	brne set_fet
+	ldi r26, 83
+set_fet:
+	pop r30
 	std Y+4, r26		; 1412:   ac 83           Memory[[r28:r29]+4] = r26;
 	std Y+5, r26		; 1414:   ad 83           Memory[[r28:r29]+5] = r26;
 	jmp 0x1416
 
-fet_old_box:
-	lds r26, 83
-	rjmp set_fet
-	
+	#
 	# Replace the SPI transfer complete with a jump to our new code
-	
-replace_0x28:
-	jmp replacement_spi_transfer_complete
-
+	#
 	# when a SPI transfer is complete check if we're a new box, if so
 	# do the original 1.6 SPI transfer complete code, otherwise copy in
 	# the old 1.5 SPI transfer code here and do that.
 	
+replace_0x28:
+	jmp replacement_spi_transfer_complete
+
 replacement_spi_transfer_complete:
 	lds r23, 0x30f
 	cpi r23, 15
 	breq oldbox
-	jmp 0x10f8
+	jmp 0x10f8		; Old spi_transfer_complete
 
 oldbox:
 	in r1, 0x3f	  ; 10f6:   1f b6           r1 = IO[SREG];
