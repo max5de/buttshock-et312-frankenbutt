@@ -2,14 +2,12 @@
 	# our routine. Let's move the 0x1476 code elsehwere so the 1.5 bl
 	# doesn't jump to rubbish, and use that to mark a MAXDAC box.
 	#
-	# set memory 0x4ff to 15 if it's a MAXDAC box (since lower mem gets wiped)
+	# set memory 0x30f to 15 if it's a MAXDAC box (since lower mem gets wiped)
 	#
 	# not yet tested on 1.6bl/1.6box
-	# not yet tested on 1.5bl/1.5box
-	#
+	# not yet tested on 1.5bl/1.5box (doesn't work yet)
 	
 	.org 0x3000
-
 
 	# since 0x1476 is a jump point, relocate all the code before it too
 	
@@ -50,23 +48,19 @@ replace_0x1460:
 	# to jump to
 	
 replace_0x1476:
-	ldi r27, 15
-	mov r5, r27
-#	ldi r26, 15
-#	sts 0x4ff, r26
+	ldi r26, 15
+	sts 0x30f, r26
 	jmp 0x14a6
 
 	# Old box? set 0x500 to a 1 so we don't need to change other
 	# things
 	
 new_init_0x150e:
-	ldi r27, 15
-	cp r5, r27
+	lds r27, 0x30f
+	cpi r27, 15
 	brne newbox
-	ldi r26, 15
-	sts 0x4ff, r26
 	ldi r26, 1
-newbox:	
+newbox:
 	sts 0x500, r26 ; a0 93 00 05 this is what we overwrote 
 	jmp 0x1512
 	
@@ -80,7 +74,7 @@ replace_0x1410:
 
 measure_fet:
 	ldi r26, 100
-	lds r30, 0x4ff
+	lds r30, 0x30f
 	cpi r30, 15
 	breq fet_old_box
 set_fet:	
@@ -91,7 +85,6 @@ set_fet:
 fet_old_box:
 	lds r26, 83
 	rjmp set_fet
-
 	
 	# Replace the SPI transfer complete with a jump to our new code
 	
@@ -103,7 +96,7 @@ replace_0x28:
 	# the old 1.5 SPI transfer code here and do that.
 	
 replacement_spi_transfer_complete:
-	lds r23, 0x4ff
+	lds r23, 0x30f
 	cpi r23, 15
 	breq oldbox
 	jmp 0x10f8
