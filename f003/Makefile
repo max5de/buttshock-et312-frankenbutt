@@ -1,4 +1,4 @@
-SOURCES=unifyboxes.S changeversion.S 
+SOURCES=changeversion.S unifyboxes.S 
 
 FWUTILS=python3 ../../buttshock-et312-firmware/scripts/fw-utils.py
 
@@ -24,4 +24,4 @@ f003.elf: $(OBJECTS)
 	avr-as $(ASFLAGS) $< -o $@
 
 clean:
-	rm f003.bin f003.upg f003.elf *.o
+	rm -f f003.bin f003.upg f003.elf *.o

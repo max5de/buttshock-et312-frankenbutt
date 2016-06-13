@@ -15,8 +15,6 @@
 	# not yet tested on 1.6bl/1.6box
 	# not yet tested on 1.5bl/1.5box (doesn't work yet)
 	
-	.org 0x3000
-
 	# since 0x1476 is a jump point, we have to relocate all the
 	# code before it too
 
