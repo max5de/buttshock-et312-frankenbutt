@@ -79,13 +79,13 @@ Disassembly of section .text:
     3072:	0c 94 3b 18 	jmp	0x3076	; 0x3076 <replacement_spi_transfer_complete>
 
 00003076 <replacement_spi_transfer_complete>:
-    3076:	70 91 0f 03 	lds	r23, 0x030F
-    307a:	7f 30       	cpi	r23, 0x0F	; 15
-    307c:	11 f0       	breq	.+4      	; 0x3082 <oldbox>
-    307e:	0c 94 7c 08 	jmp	0x10f8	; 0x10f8 <__ctors_end+0x10f8>
+    3076:	1f b6       	in	r1, 0x3f	; 63
+    3078:	70 91 0f 03 	lds	r23, 0x030F
+    307c:	7f 30       	cpi	r23, 0x0F	; 15
+    307e:	11 f0       	breq	.+4      	; 0x3084 <oldbox>
+    3080:	0c 94 7d 08 	jmp	0x10fa	; 0x10fa <__ctors_end+0x10fa>
 
-00003082 <oldbox>:
-    3082:	1f b6       	in	r1, 0x3f	; 63
+00003084 <oldbox>:
     3084:	70 91 08 02 	lds	r23, 0x0208
     3088:	75 30       	cpi	r23, 0x05	; 5
     308a:	30 f5       	brcc	.+76     	; 0x30d8 <Label_0x114e>

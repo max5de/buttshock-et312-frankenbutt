@@ -77,7 +77,7 @@ newbox:
 	jmp 0x1512
 
 	#
-	# We measure the fet leakage and older boxes start differently....
+	# We measure the fet current and older boxes start differently....
 	#
 
 replace_0x1410:
@@ -107,13 +107,13 @@ replace_0x28:
 	jmp replacement_spi_transfer_complete
 
 replacement_spi_transfer_complete:
+	in r1, 0x3f	  ; 10f6:   1f b6           r1 = IO[SREG];
 	lds r23, 0x30f
 	cpi r23, 15
 	breq oldbox
-	jmp 0x10f8		; Old spi_transfer_complete
+	jmp 0x10fa		; Old spi_transfer_complete
 
 oldbox:
-	in r1, 0x3f	  ; 10f6:   1f b6           r1 = IO[SREG];
 	lds r23, 0x208    ; 10f8:   70 91 08 02     r23 = Memory[0x0208];               ; 520
 	cpi r23, 0x5	  ; 10fc:   75 30           cmp(r23, 0x05);                     ; 5
 	brcc Label_0x114e
