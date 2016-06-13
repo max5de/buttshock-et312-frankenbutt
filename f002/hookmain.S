@@ -5,8 +5,6 @@
 	# we stick a little counter in the bottom right of the screen, just a demo
 	#
 	
-	.org 0x3000
-
 	# we can overwrite r30, r31, r26
 
 	show_text_on_display = 0x12ec

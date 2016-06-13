@@ -1,4 +1,4 @@
-SOURCES=hookmain.S newmenu.S changeversion.S removerandomxor.S serialdumpmemory.S fixknobscaling.S
+SOURCES=changeversion.S hookmain.S newmenu.S removerandomxor.S serialdumpmemory.S fixknobscaling.S
 
 FWUTILS=python3 ../../buttshock-et312-firmware/scripts/fw-utils.py
 
@@ -24,4 +24,4 @@ f002.elf: $(OBJECTS)
 	avr-as $(ASFLAGS) $< -o $@
 
 clean:
-	rm f002.bin f002.upg f002.elf *.o
+	rm -f f002.bin f002.upg f002.elf *.o
