@@ -4,6 +4,9 @@
 	# First we have to hook the display routine, currently you get garbage if you try to
 	# display strings <0x64 (which means they are 16 characters long) outside the table
 	# so anything 0x20 to 0x64 is okay for us to replace.
+
+	show_text_on_display = 0x12ec
+	show_text_on_display2 = 0x12dc	
 	
 hook_show_Text_on_Display:
 	ldi r28, 0x10		; we overwrote this
@@ -38,7 +41,7 @@ got_menu_option_0b:
 	ldi r26, 0x20
 	std Y+24, r26		; Menu Current (start at 0x20)
 	std Y+25, r26		; Menu Min
-	call 0x12ec		; show_text_on_display
+	call show_text_on_display
 	ldi r21, 10
 	ldi r18, 8		; previous
 	ldi r20, 9		; next
@@ -73,9 +76,9 @@ not_0x22:
 	
 	ldi r26, 0x23
 	add r26, r27		; display 0x23 (debug now off) or 0x24 (debug now on)
-	call 0x12ec		; show_text_on_display
+	call show_text_on_display
 	ldi r26, 4		; "Press any key"
-	call 0x12dc		; show_text_on_display2
+	call show_text_on_display
 	
 	ldi r22, 4
 	ldi r19, 4

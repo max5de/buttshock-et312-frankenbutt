@@ -16,9 +16,11 @@
 	# We could use a lookup table, but we're only called a few times a second
 	# so lets multiply by 100 and divide by 256 (use the msb). Sorted.
 
+	multiplyr30r31 = 0x1362
+	
 replace_0x128a:	
 	ldi r31, 100
-	call 0x1362		; r30:r31 = r30 * r31 preserves other registeres
+	call multiplyr30r31		; r30:r31 = r30 * r31 preserves other registeres
 	mov r30, r31
 	jmp 0x12a0
 
