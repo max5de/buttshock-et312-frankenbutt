@@ -73,6 +73,7 @@ not_0x22:
 	eor r27, r26
 	std Y+14, r27		; toggle bit0
 	andi r27 , 1
+	sts 0x207, r27		; Existing calltable_22 debug mode!
 	
 	ldi r26, 0x23
 	add r26, r27		; display 0x23 (debug now off) or 0x24 (debug now on)

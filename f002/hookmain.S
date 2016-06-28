@@ -19,9 +19,9 @@
 	rand3_time_off_max = 90
 	
 fave_modes:			; you have to have an even number or compiler will complain
-	.byte 0x76, 0x77, 0x7b, 0x78, 0x83, 0x86, 0x81, 0x86, 0x81, 0x77, 0x86, 0x86
+	.byte 0x76, 0x77, 0x7b, 0x78, 0x83, 0x86, 0x81, 0x86, 0x81, 0x76, 0x86, 0x86
 	# ETMODE_waves, ETMODE_stroke, ETMODE_rhythm, ETMODE_climb, ETMODE_orgasm, ETMODE_phase2, ETMODE_random2, ETMODE_phase2, ETMODE
-	# _random2, ETMODE_stroke,ETMODE_phase2
+	# _random2, ETMODE_waves,ETMODE_phase2
 
 hookloopmain:	
 	ldd r30, Y+19	; 61Hz (0x73-$4073-master-timer-lsb)
@@ -119,7 +119,7 @@ check_time:
 	std Y+46, r26
 	call r26_is_random_number_between_0x8d_0x8e
 
-	std Y+21, r30   ; store it
+	std Y+21, r26   ; store it
 	ldi r30, 0x18	; start a new routine with no output (restarts routine timer)
 	call run_call_table
 
