@@ -18,6 +18,8 @@
 	# since 0x1476 is a jump point, we have to relocate all the
 	# code before it too
 
+	whatboxarewe = 0x30f
+	
 replace_0x1460:
 	jmp Label_0x1460
 
@@ -56,7 +58,7 @@ Label_0x1492:
 	
 replace_0x1476:
 	ldi r26, 15
-	sts 0x30f, r26
+	sts whatboxarewe, r26
 	jmp 0x14a6
 
 	# Old box? set 0x500 to a 1 so we don't need to change other
@@ -66,7 +68,7 @@ replace_0x150e:
 	jmp Label_0x150e
 
 Label_0x150e:
-	lds r27, 0x30f
+	lds r27, whatboxarewe
 	cpi r27, 15
 	brne newbox
 	ldi r26, 1
@@ -84,7 +86,7 @@ replace_0x1410:
 Label_0x1410:
 	push r30
 	ldi r26, 100
-	lds r30, 0x30f
+	lds r30, whatboxarewe
 	cpi r30, 15
 	brne set_fet
 	ldi r26, 83
@@ -106,7 +108,7 @@ replace_0x28:
 
 replacement_spi_transfer_complete:
 	in r1, 0x3f	  ; 10f6:   1f b6           r1 = IO[SREG];
-	lds r23, 0x30f
+	lds r23, whatboxarewe
 	cpi r23, 15
 	breq oldbox
 	jmp 0x10fa		; Old spi_transfer_complete
