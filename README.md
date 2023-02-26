@@ -9,7 +9,7 @@ features to the ET-312 Electrostimulation Device Firmware.
 
 To apply firmware patches you'll need
 
-- a copy of repo https://github.com/metafetish/buttshock-et312-firmware/
+- a copy of repo [https://github.com/metafetish/buttshock-et312-firmware/](https://github.com/orgasmscience/buttshock-et312-firmware)
 - base firmware created from above repo
 - a firmware patch file (it's plain text)
 
